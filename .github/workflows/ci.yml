@@ -47,7 +47,21 @@ jobs:
           mcpp toolchain default gcc@16.1.0
           mcpp --version
 
-      - name: Build library (full FFmpeg from source)
+      # TEMPORARY (until mcpp-index#74 is merged and the index artifact is
+      # republished): resolve compat.ffmpeg from a checkout of mcpp-index.
+      # Remove this step + the [indices] injection once published.
+      - name: Bridge compat index (pre-publication)
+        run: |
+          git clone --depth 1 https://github.com/mcpplibs/mcpp-index /tmp/mcpp-index
+          if [ ! -f /tmp/mcpp-index/pkgs/c/compat.ffmpeg.lua ]; then
+            git -C /tmp/mcpp-index fetch --depth 1 origin feat/add-compat-ffmpeg
+            git -C /tmp/mcpp-index checkout FETCH_HEAD
+          fi
+          for f in mcpp.toml examples/probe/mcpp.toml examples/decode_frames/mcpp.toml; do
+            printf '\n[indices]\ncompat = { path = "/tmp/mcpp-index" }\n' >> "$f"
+          done
+
+      - name: Build library (via compat.ffmpeg source build)
         run: mcpp build
 
       - name: Run tests (API surface + encode/decode roundtrip)
@@ -64,11 +78,10 @@ jobs:
           mcpp build
 
   macos-snapshot:
-    # macOS package builds are blocked on mcpp#229 (dependency cfg-conditional
-    # sources) + a committed gen/macos-aarch64 snapshot. Until then this job
-    # validates the packaging machinery end-to-end on macOS: FFmpeg configure,
-    # snapshot capture, and source-list derivation — and publishes the snapshot
-    # as an artifact ready to be committed when #229 lands.
+    # macOS package support is blocked on mcpp#229 (dependency cfg-conditional
+    # sources) + a macos descriptor profile. Until then this job smoke-tests
+    # the packaging machinery on macOS: official-tarball fetch + hermetic
+    # configure + make -n source derivation.
     name: snapshot (macos-latest, experimental)
     runs-on: macos-latest
     continue-on-error: true
@@ -77,18 +90,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Generate macos-aarch64 snapshot + source list
+      - name: Fetch upstream + hermetic configure + source derivation
         run: |
-          CC=clang sh tools/gen_config.sh macos-aarch64
-          test -f gen/macos-aarch64/config.h
-          test -f gen/macos-aarch64/libavutil/ffversion.h
-          git diff --stat mcpp.toml | tail -2
-
-      - name: Upload snapshot artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: gen-macos-aarch64
-          path: |
-            gen/macos-aarch64/
-            mcpp.toml
-          retention-days: 30
+          src="$(sh tools/fetch_upstream.sh)"
+          bld="$(mktemp -d)"
+          cd "$bld"
+          "$src/configure" --cc=clang --disable-autodetect --disable-programs --disable-doc
+          make -n > make-n.log 2>/dev/null || true
+          n=$(grep -cE '\.(c|S|asm)\b' make-n.log || true)
+          echo "derived compile lines: $n"
+          test "$n" -gt 1500

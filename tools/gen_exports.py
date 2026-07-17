@@ -166,8 +166,12 @@ def parse_header(path: Path):
 
 
 def main() -> None:
-    root = Path(sys.argv[1]) if len(sys.argv) > 1 else \
-        Path(__file__).resolve().parent.parent / "third_party" / "ffmpeg"
+    if len(sys.argv) > 1:
+        root = Path(sys.argv[1])
+    else:
+        import subprocess
+        fetch = Path(__file__).resolve().parent / "fetch_upstream.sh"
+        root = Path(subprocess.check_output(["sh", str(fetch)], text=True).strip())
     out_dir = Path(__file__).resolve().parent.parent / "src" / "gen_exports"
     out_dir.mkdir(parents=True, exist_ok=True)
 

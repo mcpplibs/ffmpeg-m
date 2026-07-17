@@ -92,3 +92,22 @@
   include_dirs 或用 defines 方案定案。
 - opencv-m F2 集成:videoio `cap_ffmpeg` 依赖本包(HAVE_FFMPEG 快照翻转)。
 - mcpp-index 登记(Form-A,tag tarball)。
+
+## 追记:compat 拆分(2026-07-18,用户决策)
+
+用户 review 后决定采用生态正统的两层拆分(imgui-m 模式),替代 vendor:
+
+- **compat.ffmpeg 8.1.2** 进 mcpp-index(PR #74):新形态"全源码直编"——
+  configure 产物冻结为描述符 `generated_files`(15 文件 ≈240KB)+ `make -n`
+  源列表(2281 TU 含 157 .asm),per-glob flags 承载 BUILDING_*/-Pconfig.asm;
+  NASM 的 -I 由 mcpp 从 include_dirs 自动馈送。官方 ffmpeg.org tarball
+  (sha256 稳定)+ CN 镜像 mcpp-res/ffmpeg(gtc,已验证字节一致)。linux-only
+  (compat.x11 先例);CI pin 0.0.94→0.0.95(flags 是 0.0.95 语法)。
+- **ffmpeg-m 最小化**:移除 third_party/(112MB)与 gen/,mcpp.toml 只剩模块层
+  + `compat.ffmpeg = "8.1.2"` 依赖;工具重构为 fetch_upstream.sh(官方 tarball
+  钉版)→ gen_config.sh(configure→描述符流水线)→ gen_descriptor.py;
+  gen_sources.py 删除(职责并入描述符生成)。
+- 验证:min 化后 `mcpp build`(compat.ffmpeg 从本地 index 解析编译)+
+  `mcpp test` 2 passed + 双 examples 全过;157 `.asm.o`、3260 SIMD 符号进链。
+- CI 桥接:在 index artifact 发布 compat.ffmpeg 前,ci.yml 以 mcpp-index
+  checkout 作为 [indices] 注入(标记 TEMPORARY,发布后移除)。

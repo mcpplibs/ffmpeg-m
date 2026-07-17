@@ -1,18 +1,27 @@
 #!/bin/sh
-# gen_config.sh — packaging-time snapshot generator for ffmpeg-m.
+# gen_config.sh — maintainer-time descriptor pipeline for compat.ffmpeg.
 #
-# Runs FFmpeg's ./configure ONCE (out-of-tree) for the given target profile and
-# snapshots every generated file mcpp needs into gen/<target>/, then derives the
-# exact source list via gen_sources.py. Consumers never run this: the outputs
-# are committed. Re-run only when bumping the FFmpeg version or the profile.
+# Fetches the pinned OFFICIAL FFmpeg tarball (tools/fetch_upstream.sh), runs
+# ./configure ONCE (out-of-tree, hermetic full profile), captures every
+# generated file plus the `make -n` source list, and emits the mcpp-index
+# descriptor via tools/gen_descriptor.py. Consumers never run this: FFmpeg
+# reaches them as the compat.ffmpeg package.
 #
-# Usage: tools/gen_config.sh [target]        (default: autodetected <os>-<arch>)
+# Usage: tools/gen_config.sh [target] [out.lua]
+#   target  default: autodetected <os>-<arch>   (only linux-x86_64 supported yet)
+#   out.lua default: ../mcpp-index/pkgs/c/compat.ffmpeg.lua (if that repo is
+#           checked out next to this one), else ./compat.ffmpeg.lua
 set -eu
 
 target="${1:-$(uname -s | tr 'A-Z' 'a-z' | sed s/darwin/macos/)-$(uname -m | sed s/arm64/aarch64/)}"
 root="$(cd "$(dirname "$0")/.." && pwd)"
-src="$root/third_party/ffmpeg"
-gen="$root/gen/$target"
+version="${FFMPEG_VERSION:-8.1.2}"
+sha256="${FFMPEG_SHA256:-32faba5ef67340d54724941eae1425580791195312a4fd13bf6f820a2818bf22}"
+default_out="$root/../mcpp-index/pkgs/c/compat.ffmpeg.lua"
+[ -d "$(dirname "$default_out")" ] || default_out="$root/compat.ffmpeg.lua"
+out="${2:-$default_out}"
+
+src="$(sh "$root/tools/fetch_upstream.sh")"
 bld="$(mktemp -d /tmp/ffmpeg-m-cfg.XXXXXX)"
 trap 'rm -rf "$bld"' EXIT
 
@@ -27,41 +36,16 @@ cd "$bld"
     --disable-programs \
     --disable-doc
 
-mkdir -p "$gen/libavutil" "$gen/libavcodec" "$gen/libavformat" \
-         "$gen/libavfilter" "$gen/libavdevice"
-
-cp config.h config_components.h "$gen/"
-if [ -f config.asm ]; then cp config.asm config_components.asm "$gen/"; fi
-cp libavutil/avconfig.h "$gen/libavutil/"
-
-# avconfig.h is the ONLY consumer-visible generated header. It is identical on
-# every supported little-endian/fast-unaligned target, so one canonical copy
-# lives in the platform-neutral, consumer-propagated gen/public/ — verify the
-# fresh snapshot agrees rather than silently diverging.
-mkdir -p "$root/gen/public/libavutil"
-if [ -f "$root/gen/public/libavutil/avconfig.h" ]; then
-    cmp "$root/gen/public/libavutil/avconfig.h" libavutil/avconfig.h || {
-        echo "gen_config: avconfig.h diverges from gen/public copy for $target" >&2
-        exit 1
-    }
-else
-    cp libavutil/avconfig.h "$root/gen/public/libavutil/"
-fi
-cp libavcodec/codec_list.c libavcodec/parser_list.c libavcodec/bsf_list.c \
-   "$gen/libavcodec/"
-cp libavformat/demuxer_list.c libavformat/muxer_list.c \
-   libavformat/protocol_list.c "$gen/libavformat/"
-if [ -f libavfilter/filter_list.c ]; then cp libavfilter/filter_list.c "$gen/libavfilter/"; fi
-if [ -f libavdevice/indev_list.c ]; then cp libavdevice/indev_list.c libavdevice/outdev_list.c "$gen/libavdevice/"; fi
-
 # ffversion.h is normally a make-time product; generate it here with a RELATIVE
 # output path (an absolute path would leak into the include guard).
 sh "$src/ffbuild/version.sh" "$src" libavutil/ffversion.h
-cp libavutil/ffversion.h "$gen/libavutil/"
 
-# Derive the exact compiled-source list from make's own dry run — the single
-# source of truth for what this configuration builds.
-make -n >"$bld/make-n.log" 2>/dev/null || true
-python3 "$root/tools/gen_sources.py" "$bld/make-n.log" "$root/mcpp.toml" "$target"
+# The `make -n` dry run is the ground truth for which .c/.S/.asm files this
+# frozen configuration compiles (CONFIG_* gating + _select closures resolved).
+make -n > make-n.log 2>/dev/null || true
+grep -oE '(\.\./[^ ]+|src)/[A-Za-z0-9_/.+-]+\.(c|S|asm)\b' make-n.log \
+    | sed "s|^\.\./ffmpeg-$version/|src/|; s|^$src/|src/|" \
+    | grep '^src/' | sort -u > sources.txt
 
-echo "snapshot written to gen/$target/, mcpp.toml sources updated"
+python3 "$root/tools/gen_descriptor.py" "$bld" "$version" "$sha256" "$out"
+echo "descriptor written: $out (configured on: $target)"
