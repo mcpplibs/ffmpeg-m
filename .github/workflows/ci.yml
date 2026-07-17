@@ -1,0 +1,94 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linux:
+    name: mcpp (ubuntu-latest, required)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # mcpp resolves nasm PATH-first; ubuntu-24.04 ships nasm >= 2.16.
+      - name: Install nasm
+        run: sudo apt-get update && sudo apt-get install -y nasm && nasm --version
+
+      - name: Install Xlings
+        env:
+          XLINGS_NON_INTERACTIVE: 1
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/openxlings/xlings/refs/heads/main/tools/other/quick_install.sh | bash
+          echo "$HOME/.xlings/subos/current/bin" >> "$GITHUB_PATH"
+
+      - name: Install project tools
+        run: |
+          xlings update
+          xlings install
+
+      # Same transition step as imgui-m: pin the glibc gcc toolchain explicitly
+      # until mcpp's bootstrap default settles.
+      - name: Set default toolchain
+        run: |
+          mcpp toolchain install gcc 16.1.0
+          mcpp toolchain default gcc@16.1.0
+          mcpp --version
+
+      - name: Build library (full FFmpeg from source)
+        run: mcpp build
+
+      - name: Run tests (API surface + encode/decode roundtrip)
+        run: mcpp test
+
+      - name: Run probe example (path-dep consumer)
+        run: |
+          cd examples/probe
+          mcpp run
+
+      - name: Build decode_frames example
+        run: |
+          cd examples/decode_frames
+          mcpp build
+
+  macos-snapshot:
+    # macOS package builds are blocked on mcpp#229 (dependency cfg-conditional
+    # sources) + a committed gen/macos-aarch64 snapshot. Until then this job
+    # validates the packaging machinery end-to-end on macOS: FFmpeg configure,
+    # snapshot capture, and source-list derivation — and publishes the snapshot
+    # as an artifact ready to be committed when #229 lands.
+    name: snapshot (macos-latest, experimental)
+    runs-on: macos-latest
+    continue-on-error: true
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate macos-aarch64 snapshot + source list
+        run: |
+          CC=clang sh tools/gen_config.sh macos-aarch64
+          test -f gen/macos-aarch64/config.h
+          test -f gen/macos-aarch64/libavutil/ffversion.h
+          git diff --stat mcpp.toml | tail -2
+
+      - name: Upload snapshot artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: gen-macos-aarch64
+          path: |
+            gen/macos-aarch64/
+            mcpp.toml
+          retention-days: 30
