@@ -1,0 +1,11 @@
+swresample.h: macro SWRESAMPLE_SWRESAMPLE_H
+swresample.h: macro SWR_FLAG_RESAMPLE
+version.h: macro LIBSWRESAMPLE_BUILD
+version.h: macro LIBSWRESAMPLE_IDENT
+version.h: macro LIBSWRESAMPLE_VERSION
+version.h: macro LIBSWRESAMPLE_VERSION_INT
+version.h: macro LIBSWRESAMPLE_VERSION_MICRO
+version.h: macro LIBSWRESAMPLE_VERSION_MINOR
+version.h: macro SWRESAMPLE_VERSION_H
+version_major.h: macro LIBSWRESAMPLE_VERSION_MAJOR
+version_major.h: macro SWRESAMPLE_VERSION_MAJOR_H

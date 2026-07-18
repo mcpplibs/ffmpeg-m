@@ -1,0 +1,11 @@
+avdevice.h: macro AVDEVICE_AVDEVICE_H
+version.h: macro AVDEVICE_VERSION_H
+version.h: macro LIBAVDEVICE_BUILD
+version.h: macro LIBAVDEVICE_IDENT
+version.h: macro LIBAVDEVICE_VERSION
+version.h: macro LIBAVDEVICE_VERSION_INT
+version.h: macro LIBAVDEVICE_VERSION_MICRO
+version.h: macro LIBAVDEVICE_VERSION_MINOR
+version_major.h: macro AVDEVICE_VERSION_MAJOR_H
+version_major.h: macro FF_API_ALSA_CHANNELS
+version_major.h: macro LIBAVDEVICE_VERSION_MAJOR

@@ -1,0 +1,8 @@
+[package]
+name        = "decode-frames"
+version     = "0.1.0"
+description = "Decode every frame of a video file via import ffmpeg.av"
+license     = "LGPL-2.1-or-later"
+
+[dependencies]
+ffmpeg = { path = "../.." }

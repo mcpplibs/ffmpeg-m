@@ -1,0 +1,26 @@
+[package]
+name        = "ffmpeg"
+version     = "0.0.1"
+description = "FFmpeg C++ modules for mcpp (import ffmpeg.av;) on top of the compat.ffmpeg source build"
+license     = "MIT"
+repo        = "https://github.com/mcpplibs/ffmpeg-m"
+platforms   = ["linux"]
+
+[targets.ffmpeg]
+kind = "lib"
+
+[build]
+sources      = ["src/**/*.cppm"]
+include_dirs = ["include"]
+# FFmpeg's own CXXFLAGS carry this; common.h #errors without it in C++ TUs
+# (the module wrappers include the upstream headers in their GMF).
+cxxflags = ["-D__STDC_CONSTANT_MACROS"]
+
+[dependencies]
+# Upstream sources, config snapshot, and the full source-build recipe live in
+# the compat.ffmpeg index package (2281 TUs incl. NASM asm, built by mcpp).
+compat.ffmpeg = "8.1.2"
+
+[dev-dependencies]
+compat.gtest = "1.15.2"
+
