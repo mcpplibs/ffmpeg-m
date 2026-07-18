@@ -1,6 +1,6 @@
 #!/bin/sh
 # fetch_upstream.sh — download + extract the pinned official FFmpeg tarball
-# for maintainer-time regeneration (gen_config/gen_exports/gen_descriptor).
+# for maintainer-time regeneration of the export lists (gen_exports.py).
 # Consumers never need this: they get FFmpeg via the compat.ffmpeg package.
 #
 # Prints the extracted source root on stdout.

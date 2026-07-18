@@ -111,3 +111,19 @@
   `mcpp test` 2 passed + 双 examples 全过;157 `.asm.o`、3260 SIMD 符号进链。
 - CI 桥接:在 index artifact 发布 compat.ffmpeg 前,ci.yml 以 mcpp-index
   checkout 作为 [indices] 注入(标记 TEMPORARY,发布后移除)。
+
+## Addendum — post-publication slim (2026-07-18)
+
+mcpp-index #74 merged and the index artifact republished, so the repo was cut
+down to the pure module layer:
+
+- CI bridge step (`[indices]` injection from a mcpp-index checkout) removed —
+  `compat.ffmpeg` now resolves from the published default index (verified by a
+  cold no-override consumer build: download 16.9 MB official tarball → full
+  source build → `avutil 8.1.2`).
+- Descriptor pipeline (`tools/gen_config.sh`, `tools/gen_descriptor.py`) and
+  the macOS packaging-snapshot CI job move to mcpp-index `tools/compat-ffmpeg/`
+  next to the descriptor they generate. This repo keeps `fetch_upstream.sh` +
+  `gen_exports.py` (export-surface regeneration only).
+- Stray tracked `third_party/ffmpeg/tests/ref/fate/*` leftovers from the
+  vendored era deleted.

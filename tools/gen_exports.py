@@ -17,7 +17,8 @@ includes inside its module purview. Categories:
 The skip list is written to src/gen_exports/<lib>.skipped.txt so the macros.h
 curation stays reviewable.
 
-Usage: gen_exports.py [ffmpeg-root]      (default: repo third_party/ffmpeg)
+Usage: gen_exports.py [ffmpeg-root]      (default: pinned official tarball
+                                          via tools/fetch_upstream.sh)
 """
 
 import re

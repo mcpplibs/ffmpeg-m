@@ -47,20 +47,6 @@ jobs:
           mcpp toolchain default gcc@16.1.0
           mcpp --version
 
-      # TEMPORARY (until mcpp-index#74 is merged and the index artifact is
-      # republished): resolve compat.ffmpeg from a checkout of mcpp-index.
-      # Remove this step + the [indices] injection once published.
-      - name: Bridge compat index (pre-publication)
-        run: |
-          git clone --depth 1 https://github.com/mcpplibs/mcpp-index /tmp/mcpp-index
-          if [ ! -f /tmp/mcpp-index/pkgs/c/compat.ffmpeg.lua ]; then
-            git -C /tmp/mcpp-index fetch --depth 1 origin feat/add-compat-ffmpeg
-            git -C /tmp/mcpp-index checkout FETCH_HEAD
-          fi
-          for f in mcpp.toml examples/probe/mcpp.toml examples/decode_frames/mcpp.toml; do
-            printf '\n[indices]\ncompat = { path = "/tmp/mcpp-index" }\n' >> "$f"
-          done
-
       - name: Build library (via compat.ffmpeg source build)
         run: mcpp build
 
@@ -76,27 +62,3 @@ jobs:
         run: |
           cd examples/decode_frames
           mcpp build
-
-  macos-snapshot:
-    # macOS package support is blocked on mcpp#229 (dependency cfg-conditional
-    # sources) + a macos descriptor profile. Until then this job smoke-tests
-    # the packaging machinery on macOS: official-tarball fetch + hermetic
-    # configure + make -n source derivation.
-    name: snapshot (macos-latest, experimental)
-    runs-on: macos-latest
-    continue-on-error: true
-    timeout-minutes: 30
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Fetch upstream + hermetic configure + source derivation
-        run: |
-          src="$(sh tools/fetch_upstream.sh)"
-          bld="$(mktemp -d)"
-          cd "$bld"
-          "$src/configure" --cc=clang --disable-autodetect --disable-programs --disable-doc
-          make -n > make-n.log 2>/dev/null || true
-          n=$(grep -cE '\.(c|S|asm)\b' make-n.log || true)
-          echo "derived compile lines: $n"
-          test "$n" -gt 1500
