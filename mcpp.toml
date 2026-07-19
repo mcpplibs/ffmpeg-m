@@ -1,10 +1,10 @@
 [package]
 name        = "ffmpeg"
-version     = "0.0.1"
+version     = "0.0.2"
 description = "FFmpeg C++ modules for mcpp (import ffmpeg.av;) on top of the compat.ffmpeg source build"
 license     = "MIT"
 repo        = "https://github.com/mcpplibs/ffmpeg-m"
-platforms   = ["linux"]
+platforms   = ["linux", "macos"]
 
 [targets.ffmpeg]
 kind = "lib"
