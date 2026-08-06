@@ -1,7 +1,15 @@
+# The namespace names whose library this is, not who packaged it; the version
+# says which upstream you are getting. `mcpplibs` is mcpp's DEFAULT namespace
+# (kDefaultNamespace), not an answer to "whose library"; and `0.0.3` told a
+# consumer nothing about which FFmpeg was inside — it is 8.1.2, which is what
+# the compat.ffmpeg dependency below has said all along.
+#
+# Rule and full migration table: mcpp-index#163.
 [package]
+namespace   = "ffmpeg"
 name        = "ffmpeg"
-version     = "0.0.3"
-description = "FFmpeg C++ modules for mcpp (import ffmpeg.av;) on top of the compat.ffmpeg source build"
+version     = "8.1.2"
+description = "FFmpeg 8.1.2 C++ modules for mcpp (import ffmpeg.av;) on top of the compat.ffmpeg source build"
 license     = "MIT"
 repo        = "https://github.com/mcpplibs/ffmpeg-m"
 platforms   = ["linux", "macos", "windows"]

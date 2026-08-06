@@ -27,8 +27,8 @@ mcpp new myplayer --template ffmpeg && cd myplayer && mcpp run -- video.mp4    #
 或在已有项目中手动接入:
 
 ```toml
-[dependencies]
-ffmpeg = "0.0.3"
+[dependencies.ffmpeg]
+ffmpeg = "8.1.2"
 ```
 
 ```cpp
