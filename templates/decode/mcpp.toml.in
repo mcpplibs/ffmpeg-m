@@ -2,8 +2,5 @@
 name        = "{{project.name}}"
 version     = "0.1.0"
 
-# `ffmpeg` is spelled out: templates substitute only project.name,
-# self.name and self.version — there is no namespace placeholder yet.
-# See mcpp-index#163.
-[dependencies.ffmpeg]
-{{self.name}} = "{{self.version}}"
+[dependencies]
+"{{self.name}}" = "{{self.version}}"

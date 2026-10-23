@@ -84,3 +84,23 @@ cd examples/decode_frames && mcpp run -- video.mp4
 ## License
 
 封装代码 MIT;上游 FFmpeg 经 `compat.ffmpeg` 提供,**LGPL-2.1-or-later**(无 `--enable-gpl`/`nonfree` 组件),源码分发天然满足 LGPL 重链接要求。
+
+
+## Current-client quickstart candidate
+
+The wrapper revision is `8.1.2.1`; the upstream C/C++ API and published module
+identity stay unchanged. Development tooling uses mcpp `2026.10.24.1`. Templates
+now write one qualified dependency from `self.name`, without repeating a namespace.
+
+```sh
+mcpp new quickstart --template ffmpeg.ffmpeg@8.1.2.1:decode
+cd quickstart
+mcpp run
+```
+
+This revision is a PR candidate until its source archive and index entry are
+validated. `tools/test_template.py` exercises actual `mcpp new`, checks the
+rendered dependency, strictly builds the candidate and runs it.
+
+Without arguments the decoder generates a tiny Y4M input and verifies three
+decoded frames. Pass `mcpp run -- <video-file>` to decode your own input.

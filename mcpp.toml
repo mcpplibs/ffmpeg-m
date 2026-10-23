@@ -8,7 +8,7 @@
 [package]
 namespace   = "ffmpeg"
 name        = "ffmpeg"
-version     = "8.1.2"
+version     = "8.1.2.1"
 description = "FFmpeg 8.1.2 C++ modules for mcpp (import ffmpeg.av;) on top of the compat.ffmpeg source build"
 license     = "MIT"
 repo        = "https://github.com/mcpplibs/ffmpeg-m"

@@ -1,42 +1,64 @@
-// Decode every video frame of the given file — plain FFmpeg C API, no headers.
+// Decode a supplied video, or a generated three-frame sample when run without arguments.
 import std;
 import ffmpeg.av;
 
 int main(int argc, char** argv) {
+    struct Sample {
+        std::filesystem::path path;
+        ~Sample() { if (!path.empty()) { std::error_code error; std::filesystem::remove(path, error); } }
+    } sample;
     if (argc < 2) {
-        std::println("usage: {} <video-file>", argv[0]);
-        return 64;
+        sample.path = std::filesystem::temp_directory_path() / ("mcpp-video-" +
+            std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()) + ".y4m");
+        std::ofstream output(sample.path, std::ios::binary);
+        output << "YUV4MPEG2 W16 H16 F24:1 Ip A1:1 C420jpeg\n";
+        for (int frame = 0; frame < 3; ++frame) {
+            output << "FRAME\n";
+            output << std::string(16 * 16, static_cast<char>(32 + frame * 16));
+            output << std::string(2 * 8 * 8, static_cast<char>(128));
+        }
+        if (!output) return 1;
     }
-
-    AVFormatContext* fmt { nullptr };
-    if (avformat_open_input(&fmt, argv[1], nullptr, nullptr) < 0) {
-        std::println("cannot open {}", argv[1]);
-        return 1;
+    const std::string filename = argc > 1 ? argv[1] : sample.path.string();
+    struct Decoder {
+        AVFormatContext* format = nullptr;
+        AVCodecContext* codec = nullptr;
+        AVPacket* packet = nullptr;
+        AVFrame* frame = nullptr;
+        ~Decoder() {
+            av_frame_free(&frame);
+            av_packet_free(&packet);
+            avcodec_free_context(&codec);
+            avformat_close_input(&format);
+        }
+    } decoder;
+    if (avformat_open_input(&decoder.format, filename.c_str(), nullptr, nullptr) < 0 ||
+        avformat_find_stream_info(decoder.format, nullptr) < 0) {
+        std::println("Cannot open video: {}", filename);
+        return 2;
     }
-    avformat_find_stream_info(fmt, nullptr);
-
-    int video { av_find_best_stream(fmt, AVMEDIA_TYPE_VIDEO, -1, -1, nullptr, 0) };
-    const AVCodec* codec { avcodec_find_decoder(fmt->streams[video]->codecpar->codec_id) };
-    AVCodecContext* dec { avcodec_alloc_context3(codec) };
-    avcodec_parameters_to_context(dec, fmt->streams[video]->codecpar);
-    avcodec_open2(dec, codec, nullptr);
-
-    AVPacket* packet { av_packet_alloc() };
-    AVFrame* frame { av_frame_alloc() };
-    long frames { 0 };
-    while (av_read_frame(fmt, packet) >= 0) {
-        if (packet->stream_index == video && avcodec_send_packet(dec, packet) >= 0)
-            while (avcodec_receive_frame(dec, frame) >= 0) ++frames;
-        av_packet_unref(packet);
+    const int stream = av_find_best_stream(decoder.format, AVMEDIA_TYPE_VIDEO, -1, -1, nullptr, 0);
+    if (stream < 0) { std::println("No video stream in {}", filename); return 3; }
+    const AVCodec* codec = avcodec_find_decoder(decoder.format->streams[stream]->codecpar->codec_id);
+    if (!codec) return 4;
+    decoder.codec = avcodec_alloc_context3(codec);
+    if (!decoder.codec || avcodec_parameters_to_context(decoder.codec,
+            decoder.format->streams[stream]->codecpar) < 0 || avcodec_open2(decoder.codec, codec, nullptr) < 0)
+        return 5;
+    decoder.packet = av_packet_alloc();
+    decoder.frame = av_frame_alloc();
+    if (!decoder.packet || !decoder.frame) return 6;
+    long frames = 0;
+    while (av_read_frame(decoder.format, decoder.packet) >= 0) {
+        if (decoder.packet->stream_index == stream) {
+            if (avcodec_send_packet(decoder.codec, decoder.packet) < 0) return 7;
+            while (avcodec_receive_frame(decoder.codec, decoder.frame) >= 0) ++frames;
+        }
+        av_packet_unref(decoder.packet);
     }
-    avcodec_send_packet(dec, nullptr);
-    while (avcodec_receive_frame(dec, frame) >= 0) ++frames;
-
-    std::println("{}: {} ({}x{}), {} frames decoded",
-                 argv[1], codec->name, dec->width, dec->height, frames);
-
-    av_frame_free(&frame);
-    av_packet_free(&packet);
-    avcodec_free_context(&dec);
-    avformat_close_input(&fmt);
+    if (avcodec_send_packet(decoder.codec, nullptr) < 0) return 8;
+    while (avcodec_receive_frame(decoder.codec, decoder.frame) >= 0) ++frames;
+    std::println("{}: {} ({}x{}), {} frames decoded", filename, codec->name,
+                 decoder.codec->width, decoder.codec->height, frames);
+    return frames > 0 && (argc > 1 || frames == 3) ? 0 : 9;
 }

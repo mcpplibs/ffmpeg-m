@@ -1,4 +1,4 @@
 [template]
-description  = "Decode a video file's frames with import ffmpeg.av"
+description  = "Decode a generated sample or a supplied video with import ffmpeg.av"
 default      = true
-post_message = "cd into the project and run `mcpp run -- <video-file>`."
+post_message = "Run `mcpp run` for a generated sample, or `mcpp run -- <video-file>` for your own file."
