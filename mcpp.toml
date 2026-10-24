@@ -29,6 +29,11 @@ cxxflags = ["-D__STDC_CONSTANT_MACROS"]
 # the compat.ffmpeg index package (2281 TUs incl. NASM asm, built by mcpp).
 compat.ffmpeg = "8.1.2"
 
+[target.'cfg(all(arch = "x86_64", any(os = "linux", os = "windows")))'.xlings.workspace]
+# Frozen x86 FFmpeg profiles use NASM. Provision the managed assembler even
+# when an unrelated NASM is present on PATH, so strict consumers are portable.
+"xim:nasm" = "3.02"
+
 [dev-dependencies]
 compat.gtest = "1.15.2"
 
