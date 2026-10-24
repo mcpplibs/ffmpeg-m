@@ -5,8 +5,8 @@ extern "C" {
 #include "gen_exports/avformat.includes.inc"
 }
 
-export module ffmpeg.avformat;
+export module mcpplibs.mwrap.ffmpeg.avformat;
 
-export import ffmpeg.avcodec;
+export import mcpplibs.mwrap.ffmpeg.avcodec;
 
 #include "gen_exports/avformat.inc"

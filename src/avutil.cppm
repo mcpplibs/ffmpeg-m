@@ -6,7 +6,7 @@ extern "C" {
 #include "gen_exports/avutil.includes.inc"
 }
 
-export module ffmpeg.avutil;
+export module mcpplibs.mwrap.ffmpeg.avutil;
 
 #include "gen_exports/avutil.inc"
 

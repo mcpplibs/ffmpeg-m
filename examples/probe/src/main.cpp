@@ -1,6 +1,6 @@
 // Show what the vendored FFmpeg exposes — versions and a few codecs/formats.
 import std;
-import ffmpeg.av;
+import mcpplibs.mwrap.ffmpeg.av;
 
 int main() {
     std::println("libavutil   {}.{}", avutil_version() >> 16, (avutil_version() >> 8) & 0xff);

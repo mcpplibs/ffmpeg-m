@@ -5,8 +5,8 @@ extern "C" {
 #include "gen_exports/avcodec.includes.inc"
 }
 
-export module ffmpeg.avcodec;
+export module mcpplibs.mwrap.ffmpeg.avcodec;
 
-export import ffmpeg.avutil;
+export import mcpplibs.mwrap.ffmpeg.avutil;
 
 #include "gen_exports/avcodec.inc"

@@ -1,15 +1,9 @@
-# The namespace names whose library this is, not who packaged it; the version
-# says which upstream you are getting. `mcpplibs` is mcpp's DEFAULT namespace
-# (kDefaultNamespace), not an answer to "whose library"; and `0.0.3` told a
-# consumer nothing about which FFmpeg was inside — it is 8.1.2, which is what
-# the compat.ffmpeg dependency below has said all along.
-#
-# Rule and full migration table: mcpp-index#163.
+# Module wrapper; upstream API preserved. Policy: mcpp-index/docs/mwrap.md.
 [package]
-namespace   = "ffmpeg"
-name        = "ffmpeg"
-version     = "8.1.2"
-description = "FFmpeg 8.1.2 C++ modules for mcpp (import ffmpeg.av;) on top of the compat.ffmpeg source build"
+namespace = "mcpplibs.mwrap"
+name = "ffmpeg"
+version = "8.1.2"
+description = "FFmpeg 8.1.2 C++ modules for mcpp (import mcpplibs.mwrap.ffmpeg.av;) on top of the compat.ffmpeg source build"
 license     = "MIT"
 repo        = "https://github.com/mcpplibs/ffmpeg-m"
 platforms   = ["linux", "macos", "windows"]
@@ -29,6 +23,14 @@ cxxflags = ["-D__STDC_CONSTANT_MACROS"]
 # the compat.ffmpeg index package (2281 TUs incl. NASM asm, built by mcpp).
 compat.ffmpeg = "8.1.2"
 
+[target.'cfg(all(arch = "x86_64", any(os = "linux", os = "windows")))'.xlings.workspace]
+# Frozen x86 FFmpeg profiles use NASM. Provision the managed assembler even
+# when an unrelated NASM is present on PATH, so strict consumers are portable.
+"xim:nasm" = "3.02"
+
 [dev-dependencies]
 compat.gtest = "1.15.2"
 
+
+[package.metadata.mwrap]
+upstream-version = "8.1.2"

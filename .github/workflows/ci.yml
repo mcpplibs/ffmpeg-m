@@ -26,6 +26,9 @@ jobs:
       # No host nasm needed: mcpp >= 0.0.97 provisions nasm through the same
       # synchronous gate as the toolchain (index refresh + install + payload
       # check BEFORE the build plans, mcpp#232).
+      - name: Mwrap identity and bilingual README contract
+        run: python3 tools/check_mwrap_release.py
+
       - name: Install Xlings
         env:
           XLINGS_NON_INTERACTIVE: 1
