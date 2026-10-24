@@ -5,7 +5,8 @@
 **English** · [简体中文](README.zh.md) · [Upstream](https://github.com/FFmpeg/FFmpeg) · [Releases](https://github.com/mcpplibs/ffmpeg-m/releases) · [mcpp](https://github.com/mcpp-community/mcpp) · [Index](https://github.com/mcpplibs/mcpp-index)
 
 [![C++23](https://img.shields.io/badge/C%2B%2B-23-blue.svg)](https://en.cppreference.com/w/cpp/23)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+[![mcpp-community](https://img.shields.io/badge/mcpp--community-mwrap-blue)](https://github.com/mcpp-community)
 [![CI](https://github.com/mcpplibs/ffmpeg-m/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mcpplibs/ffmpeg-m/actions/workflows/ci.yml)
 
 Thin module interfaces over `compat.ffmpeg`; sources, frozen configuration and NASM support belong to that provider.
@@ -50,4 +51,6 @@ The source profile does not enable GPL/nonfree components.
 
 ## License
 
-Wrapper: [MIT](LICENSE). FFmpeg provider: LGPL-2.1-or-later; preserve selected source and license notices.
+Wrapper: [Apache-2.0](LICENSE). FFmpeg provider: LGPL-2.1-or-later; preserve selected source and license notices.
+
+Wrapper: Apache-2.0, mcpp-community. [Original upstream README and licenses](upstream/ffmpeg/). Upstream licenses remain unchanged.

@@ -4,7 +4,8 @@ namespace = "mcpplibs.mwrap"
 name = "ffmpeg"
 version = "8.1.2"
 description = "FFmpeg 8.1.2 C++ modules for mcpp (import mcpplibs.mwrap.ffmpeg.av;) on top of the compat.ffmpeg source build"
-license     = "MIT"
+license = "Apache-2.0"
+authors = ["mcpp-community"]
 repo        = "https://github.com/mcpplibs/ffmpeg-m"
 platforms   = ["linux", "macos", "windows"]
 
@@ -34,3 +35,39 @@ compat.gtest = "1.15.2"
 
 [package.metadata.mwrap]
 upstream-version = "8.1.2"
+
+[[runtime.deploy]]
+from = "LICENSE"
+to = "licenses/ffmpeg"
+
+[[runtime.deploy]]
+from = "NOTICE"
+to = "licenses/ffmpeg"
+
+[[runtime.deploy]]
+from = "upstream/ffmpeg/README.md"
+to = "licenses/ffmpeg/upstream/ffmpeg"
+
+[[runtime.deploy]]
+from = "upstream/ffmpeg/LICENSE.md"
+to = "licenses/ffmpeg/upstream/ffmpeg"
+
+[[runtime.deploy]]
+from = "upstream/ffmpeg/COPYING.LGPLv2.1"
+to = "licenses/ffmpeg/upstream/ffmpeg"
+
+[[runtime.deploy]]
+from = "upstream/ffmpeg/COPYING.LGPLv3"
+to = "licenses/ffmpeg/upstream/ffmpeg"
+
+[[runtime.deploy]]
+from = "upstream/ffmpeg/COPYING.GPLv2"
+to = "licenses/ffmpeg/upstream/ffmpeg"
+
+[[runtime.deploy]]
+from = "upstream/ffmpeg/COPYING.GPLv3"
+to = "licenses/ffmpeg/upstream/ffmpeg"
+
+[[runtime.deploy]]
+from = "upstream/wrapper-legacy/LICENSE"
+to = "licenses/ffmpeg/upstream/wrapper-legacy"
