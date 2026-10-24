@@ -2,13 +2,23 @@
 
 > FFmpeg 8.1.2 的 C++23 模块封装，保留 C API。
 
-[English](README.md) · **简体中文** · 上游：[FFmpeg/FFmpeg](https://github.com/FFmpeg/FFmpeg) · [Releases](https://github.com/mcpplibs/ffmpeg-m/releases) · [mcpp](https://github.com/mcpp-community/mcpp) · [Index](https://github.com/mcpplibs/mcpp-index)
+[English](README.md) · **简体中文** · [Upstream](https://github.com/FFmpeg/FFmpeg) · [Releases](https://github.com/mcpplibs/ffmpeg-m/releases) · [mcpp](https://github.com/mcpp-community/mcpp) · [Index](https://github.com/mcpplibs/mcpp-index)
 
 [![C++23](https://img.shields.io/badge/C%2B%2B-23-blue.svg)](https://en.cppreference.com/w/cpp/23)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![CI](https://github.com/mcpplibs/ffmpeg-m/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mcpplibs/ffmpeg-m/actions/workflows/ci.yml)
 
 基于 `compat.ffmpeg` 的薄模块层；源码、冻结配置与 NASM 支持由供应者提供。
+
+## 模块
+
+- `import mcpplibs.mwrap.ffmpeg;`: FFmpeg 模块聚合
+- `import mcpplibs.mwrap.ffmpeg.avcodec;`: 音视频编解码
+- `import mcpplibs.mwrap.ffmpeg.avformat;`: 容器与流输入输出
+- `import mcpplibs.mwrap.ffmpeg.avutil;`: 媒体公共类型与工具
+- `import mcpplibs.mwrap.ffmpeg.macros;`: 常用宏常量映射
+
+> More Modules API -> [模块与 API](docs/usage.md)
 
 ## 快速开始
 
@@ -27,11 +37,6 @@ mcpplibs.mwrap.ffmpeg = "8.1.2"
 import mcpplibs.mwrap.ffmpeg.av;
 int main() { return avcodec_version() == 0; }
 ```
-
-## 模块一览
-
-根模块与 `.av` 聚合 `.avutil`、`.avcodec`、`.avformat`、`.avfilter`、`.avdevice`、`.swscale`、`.swresample`。
-`.macros` 映射常用常量；预处理宏与 inline 工具在 import 前包含 `<mwrap/ffmpeg/macros.hpp>`。
 
 ## 示例
 

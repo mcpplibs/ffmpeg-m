@@ -50,9 +50,9 @@ int main() {
 
 | import | 内容 |
 |---|---|
-| `ffmpeg.av` | 下面全部(推荐默认) |
-| `ffmpeg.avutil` / `ffmpeg.avcodec` / `ffmpeg.avformat` / `ffmpeg.avfilter` / `ffmpeg.avdevice` / `ffmpeg.swscale` / `ffmpeg.swresample` | 每库一个;依赖自动 re-export(`import mcpplibs.mwrap.ffmpeg.avformat;` 带上 avcodec + avutil) |
-| `ffmpeg` | `ffmpeg.av` 的 lib-root 别名 |
+| `mcpplibs.mwrap.ffmpeg.av` | 下面全部(推荐默认) |
+| `mcpplibs.mwrap.ffmpeg.avutil` / `mcpplibs.mwrap.ffmpeg.avcodec` / `mcpplibs.mwrap.ffmpeg.avformat` / `mcpplibs.mwrap.ffmpeg.avfilter` / `mcpplibs.mwrap.ffmpeg.avdevice` / `mcpplibs.mwrap.ffmpeg.swscale` / `mcpplibs.mwrap.ffmpeg.swresample` | 每库一个;依赖自动 re-export(`import mcpplibs.mwrap.ffmpeg.avformat;` 带上 avcodec + avutil) |
+| `mcpplibs.mwrap.ffmpeg` | `mcpplibs.mwrap.ffmpeg.av` 的 lib-root 别名 |
 
 命名模块不能导出宏或 `static inline` 帮助函数。有链接的都从 import 来;宏拼写(`AVERROR`、`AV_NOPTS_VALUE`、`AVIO_FLAG_WRITE`、`MKTAG` …)与 inline 工具(`av_q2d`、`av_clip` …)在 import 前加可选侧头:
 

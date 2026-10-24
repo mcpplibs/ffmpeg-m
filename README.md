@@ -2,13 +2,23 @@
 
 > FFmpeg 8.1.2 as C++23 modules, preserving the C API.
 
-**English** · [简体中文](README.zh.md) · Upstream: [FFmpeg/FFmpeg](https://github.com/FFmpeg/FFmpeg) · [Releases](https://github.com/mcpplibs/ffmpeg-m/releases) · [mcpp](https://github.com/mcpp-community/mcpp) · [Index](https://github.com/mcpplibs/mcpp-index)
+**English** · [简体中文](README.zh.md) · [Upstream](https://github.com/FFmpeg/FFmpeg) · [Releases](https://github.com/mcpplibs/ffmpeg-m/releases) · [mcpp](https://github.com/mcpp-community/mcpp) · [Index](https://github.com/mcpplibs/mcpp-index)
 
 [![C++23](https://img.shields.io/badge/C%2B%2B-23-blue.svg)](https://en.cppreference.com/w/cpp/23)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![CI](https://github.com/mcpplibs/ffmpeg-m/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mcpplibs/ffmpeg-m/actions/workflows/ci.yml)
 
 Thin module interfaces over `compat.ffmpeg`; sources, frozen configuration and NASM support belong to that provider.
+
+## Modules
+
+- `import mcpplibs.mwrap.ffmpeg;`: Complete FFmpeg module aggregate
+- `import mcpplibs.mwrap.ffmpeg.avcodec;`: Audio/video codecs
+- `import mcpplibs.mwrap.ffmpeg.avformat;`: Containers and stream I/O
+- `import mcpplibs.mwrap.ffmpeg.avutil;`: Common media types and utilities
+- `import mcpplibs.mwrap.ffmpeg.macros;`: Common macro constant mappings
+
+> More Modules API -> [Usage and API](docs/usage.md)
 
 ## Getting started
 
@@ -27,11 +37,6 @@ mcpplibs.mwrap.ffmpeg = "8.1.2"
 import mcpplibs.mwrap.ffmpeg.av;
 int main() { return avcodec_version() == 0; }
 ```
-
-## Modules
-
-Root and `.av` aggregate `.avutil`, `.avcodec`, `.avformat`, `.avfilter`, `.avdevice`, `.swscale`, `.swresample`.
-`.macros` maps common constants. For preprocessing and inline helpers include `<mwrap/ffmpeg/macros.hpp>` before imports.
 
 ## Examples
 
