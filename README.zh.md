@@ -5,7 +5,8 @@
 [English](README.md) · **简体中文** · [Upstream](https://github.com/FFmpeg/FFmpeg) · [Releases](https://github.com/mcpplibs/ffmpeg-m/releases) · [mcpp](https://github.com/mcpp-community/mcpp) · [Index](https://github.com/mcpplibs/mcpp-index)
 
 [![C++23](https://img.shields.io/badge/C%2B%2B-23-blue.svg)](https://en.cppreference.com/w/cpp/23)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+[![mcpp-community](https://img.shields.io/badge/mcpp--community-mwrap-blue)](https://github.com/mcpp-community)
 [![CI](https://github.com/mcpplibs/ffmpeg-m/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mcpplibs/ffmpeg-m/actions/workflows/ci.yml)
 
 基于 `compat.ffmpeg` 的薄模块层；源码、冻结配置与 NASM 支持由供应者提供。
@@ -50,4 +51,6 @@ int main() { return avcodec_version() == 0; }
 
 ## 许可证
 
-封装：[MIT](LICENSE)。FFmpeg 供应者：LGPL-2.1-or-later；保留选中源码与许可证通知。
+封装：[Apache-2.0](LICENSE)。FFmpeg 供应者：LGPL-2.1-or-later；保留选中源码与许可证通知。
+
+封装：Apache-2.0，mcpp-community。[上游原始 README 与许可证](upstream/ffmpeg/)，上游许可保持原样。

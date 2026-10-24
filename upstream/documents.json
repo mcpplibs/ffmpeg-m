@@ -1,0 +1,40 @@
+{
+  "upstream": "https://ffmpeg.org/releases/ffmpeg-8.1.2.tar.gz",
+  "documents": [
+    {
+      "path": "upstream/ffmpeg/README.md",
+      "source": "https://ffmpeg.org/releases/ffmpeg-8.1.2.tar.gz/README.md",
+      "sha256": "05ba4b92c96605434b1aaae3eedf5a2c280c9607bf78ffca9a5b536d9af2dc6a"
+    },
+    {
+      "path": "upstream/ffmpeg/LICENSE.md",
+      "source": "https://ffmpeg.org/releases/ffmpeg-8.1.2.tar.gz/LICENSE.md",
+      "sha256": "2e1d16c72fd74e12063776371da757322f8b77589386532f4fd8634bde7de1af"
+    },
+    {
+      "path": "upstream/ffmpeg/COPYING.LGPLv2.1",
+      "source": "https://ffmpeg.org/releases/ffmpeg-8.1.2.tar.gz/COPYING.LGPLv2.1",
+      "sha256": "246041b6ecf9bc32d718a62c57877c78b5eb397b6467e74ed7ae2626ab189c30"
+    },
+    {
+      "path": "upstream/ffmpeg/COPYING.LGPLv3",
+      "source": "https://ffmpeg.org/releases/ffmpeg-8.1.2.tar.gz/COPYING.LGPLv3",
+      "sha256": "da7eabb7bafdf7d3ae5e9f223aa5bdc1eece45ac569dc21b3b037520b4464768"
+    },
+    {
+      "path": "upstream/ffmpeg/COPYING.GPLv2",
+      "source": "https://ffmpeg.org/releases/ffmpeg-8.1.2.tar.gz/COPYING.GPLv2",
+      "sha256": "8177f97513213526df2cf6184d8ff986c675afb514d4e68a404010521b880643"
+    },
+    {
+      "path": "upstream/ffmpeg/COPYING.GPLv3",
+      "source": "https://ffmpeg.org/releases/ffmpeg-8.1.2.tar.gz/COPYING.GPLv3",
+      "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903"
+    },
+    {
+      "path": "upstream/wrapper-legacy/LICENSE",
+      "source": "Previous wrapper LICENSE, retained copyright and permission notice",
+      "sha256": "1f4d6875cf648ce824a9dcbdf343e5f932bb44bdee495faffae9e142bcd67eb6"
+    }
+  ]
+}
