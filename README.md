@@ -1,20 +1,17 @@
 # ffmpeg
 
 > FFmpeg 8.1.2 as C++23 modules, preserving the C API.
+> Thin module interfaces over `compat.ffmpeg`; sources, frozen configuration and NASM support belong to that provider.
 
 **English** · [简体中文](README.zh.md)
+
+Upstream: [FFmpeg/FFmpeg](https://github.com/FFmpeg/FFmpeg)
 
 [Releases](https://github.com/mcpplibs/ffmpeg-m/releases) · [mcpp](https://github.com/mcpp-community/mcpp) · [Index](https://github.com/mcpplibs/mcpp-index)
 
 [![C++23](https://img.shields.io/badge/C%2B%2B-23-blue.svg)](https://en.cppreference.com/w/cpp/23)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![CI](https://github.com/mcpplibs/ffmpeg-m/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mcpplibs/ffmpeg-m/actions/workflows/ci.yml)
-
-Use mcpp **2026.10.24.1**. The new mwrap identity becomes installable after index publication.
-
-## Characteristics
-
-Thin module interfaces over `compat.ffmpeg`; sources, frozen configuration and NASM support belong to that provider.
 
 ## Getting started
 
