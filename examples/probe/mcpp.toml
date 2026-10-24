@@ -1,8 +1,8 @@
 [package]
 name        = "ffmpeg-probe"
 version     = "0.1.0"
-description = "List the FFmpeg build surface through import ffmpeg.av"
+description = "List the FFmpeg build surface through import mcpplibs.mwrap.ffmpeg.av"
 license     = "LGPL-2.1-or-later"
 
 [dependencies]
-ffmpeg = { path = "../.." }
+"mcpplibs.mwrap.ffmpeg" = { path = "../.." }

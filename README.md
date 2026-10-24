@@ -1,45 +1,54 @@
-# ffmpeg-m
+# ffmpeg
 
-FFmpeg **8.1.2** 的 C++23 模块封装，保留 `AVFrame`、`avcodec_open2` 等上游 C API。
+> FFmpeg 8.1.2 as C++23 modules, preserving the C API.
 
-## 快速开始
+**English** · [简体中文](README.zh.md)
 
-使用 mcpp **2026.10.24.1**。以下为候选版本，索引发布后可直接创建项目。
+[Releases](https://github.com/mcpplibs/ffmpeg-m/releases) · [mcpp](https://github.com/mcpp-community/mcpp) · [Index](https://github.com/mcpplibs/mcpp-index)
+
+[![C++23](https://img.shields.io/badge/C%2B%2B-23-blue.svg)](https://en.cppreference.com/w/cpp/23)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![CI](https://github.com/mcpplibs/ffmpeg-m/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mcpplibs/ffmpeg-m/actions/workflows/ci.yml)
+
+Use mcpp **2026.10.24.1**. The new mwrap identity becomes installable after index publication.
+
+## Characteristics
+
+Thin module interfaces over `compat.ffmpeg`; sources, frozen configuration and NASM support belong to that provider.
+
+## Getting started
 
 ```sh
-mcpp new video --template ffmpeg.ffmpeg@8.1.2.1
-cd video
+mcpp new media --template mcpplibs.mwrap.ffmpeg@8.1.2
+cd media
 mcpp run
 ```
 
-默认模板生成一个三帧样例并解码；处理自己的视频可使用 `mcpp run -- video.mp4`。
-
-## 已有项目
-
 ```toml
 [dependencies]
-"ffmpeg.ffmpeg" = "8.1.2.1"
+mcpplibs.mwrap.ffmpeg = "8.1.2"
 ```
 
 ```cpp
-import std;
-import ffmpeg.av;
-int main() {
-    std::println("FFmpeg {}", av_version_info());
-}
+import mcpplibs.mwrap.ffmpeg.av;
+int main() { return avcodec_version() == 0; }
 ```
 
-## 能力边界
+## Modules
 
-实现由 `compat.ffmpeg` 从源码构建，模块层保留原 API。目标平台为 Linux、macOS、Windows。
-`ffmpeg.av` 聚合各库，也可独立 import `ffmpeg.avcodec`、`ffmpeg.avformat` 等子模块。
+Root and `.av` aggregate `.avutil`, `.avcodec`, `.avformat`, `.avfilter`, `.avdevice`, `.swscale`, `.swresample`.
+`.macros` maps common constants. For preprocessing and inline helpers include `<mwrap/ffmpeg/macros.hpp>` before imports.
 
-宏与内部链接帮助函数通过 import 前包含 `<ffmpeg-m/macros.h>` 使用。
-外部 codec、GPU SDK 及其他构建 profile 的范围见详细文档。
+## Examples
 
-## 文档
+The default template encodes and decodes a generated frame without external files.
+[Probe](examples/probe) · [Decode frames](examples/decode_frames) · [Details](docs/usage.md)
 
-[用法与模块](docs/usage.md) · [版本探针](examples/probe) ·
-[视频解码](examples/decode_frames) · [MIT 封装许可](LICENSE)
+## Build and runtime
 
-上游 FFmpeg 的许可由对应 `compat.ffmpeg` 构建配置决定，本候选使用 LGPL 配置。
+Linux, macOS and Windows; use `mcpp build` and `mcpp test`. External hardware SDK APIs require separate headers/SDKs.
+The source profile does not enable GPL/nonfree components.
+
+## License
+
+Wrapper: [MIT](LICENSE). FFmpeg provider: LGPL-2.1-or-later; preserve selected source and license notices.

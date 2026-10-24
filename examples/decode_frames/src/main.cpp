@@ -1,6 +1,6 @@
 // Decode every video frame of the given file — plain FFmpeg C API, no headers.
 import std;
-import ffmpeg.av;
+import mcpplibs.mwrap.ffmpeg.av;
 
 int main(int argc, char** argv) {
     if (argc < 2) {

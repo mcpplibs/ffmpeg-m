@@ -10,7 +10,7 @@
 // compiler-hostile territory across the ecosystem).
 #include <ffmpeg-m/macros.h>
 
-import ffmpeg.av;
+import mcpplibs.mwrap.ffmpeg.av;
 
 TEST(ApiSurface, VersionsMatchVendoredRelease) {
     EXPECT_EQ(avutil_version() >> 16, 60u);      // n8.1.x: libavutil major 60

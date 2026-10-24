@@ -2,7 +2,7 @@ Detailed usage and background. See the [README](../README.md) for the current ca
 
 # ffmpeg
 
-> FFmpeg 的 C++ 模块化封装 — `import ffmpeg.av;` 即用 · 三平台 · 全从源码构建,API 不变
+> FFmpeg 的 C++ 模块化封装 — `import mcpplibs.mwrap.ffmpeg.av;` 即用 · 三平台 · 全从源码构建,API 不变
 
 [![Release](https://img.shields.io/github/v/release/mcpplibs/ffmpeg-m)](https://github.com/mcpplibs/ffmpeg-m/releases)
 [![C++23](https://img.shields.io/badge/C%2B%2B-23-blue.svg)](https://en.cppreference.com/w/cpp/23)
@@ -15,7 +15,7 @@ Detailed usage and background. See the [README](../README.md) for the current ca
 
 ## 核心特性
 
-- **纯模块导入** — `import ffmpeg.av;`,消费者代码零 `#include`,用的仍是你熟悉的 C API 与全局名(`avcodec_open2`、`AVFrame`、`AV_CODEC_ID_H264` …)
+- **纯模块导入** — `import mcpplibs.mwrap.ffmpeg.av;`,消费者代码零 `#include`,用的仍是你熟悉的 C API 与全局名(`avcodec_open2`、`AVFrame`、`AV_CODEC_ID_H264` …)
 - **从源码构建,消费端不跑 configure** — [`compat.ffmpeg`](https://github.com/mcpp-community/mcpp-index) 携带冻结 configure 快照 + 精确源码清单,mcpp 直接编译整套 FFmpeg 8.1.2(2124 `.c` + 157 NASM `.asm`,x86 SIMD 含)—— 32 核冷构建 ≈ 21 s;本仓库只是薄薄的模块层
 - **全功能 profile** — 600+ decoders / 350+ demuxers / encoders / muxers / filters / swscale / swresample 全开,hermetic(不探测宿主库),LGPL-2.1+ 干净(无 `--enable-gpl`/`nonfree`)
 - **三平台** — Linux / macOS / Windows 三平台 CI
@@ -29,13 +29,13 @@ mcpp new myplayer --template ffmpeg && cd myplayer && mcpp run -- video.mp4    #
 或在已有项目中手动接入:
 
 ```toml
-[dependencies.ffmpeg]
+[dependencies.mcpplibs.mwrap]
 ffmpeg = "8.1.2"
 ```
 
 ```cpp
 import std;
-import ffmpeg.av;   // 整套 FFmpeg 表面,Python `import av` 风格
+import mcpplibs.mwrap.ffmpeg.av;   // 整套 FFmpeg 表面,Python `import av` 风格
 
 int main() {
     AVFormatContext* fmt { nullptr };
@@ -51,14 +51,14 @@ int main() {
 | import | 内容 |
 |---|---|
 | `ffmpeg.av` | 下面全部(推荐默认) |
-| `ffmpeg.avutil` / `ffmpeg.avcodec` / `ffmpeg.avformat` / `ffmpeg.avfilter` / `ffmpeg.avdevice` / `ffmpeg.swscale` / `ffmpeg.swresample` | 每库一个;依赖自动 re-export(`import ffmpeg.avformat;` 带上 avcodec + avutil) |
+| `ffmpeg.avutil` / `ffmpeg.avcodec` / `ffmpeg.avformat` / `ffmpeg.avfilter` / `ffmpeg.avdevice` / `ffmpeg.swscale` / `ffmpeg.swresample` | 每库一个;依赖自动 re-export(`import mcpplibs.mwrap.ffmpeg.avformat;` 带上 avcodec + avutil) |
 | `ffmpeg` | `ffmpeg.av` 的 lib-root 别名 |
 
 命名模块不能导出宏或 `static inline` 帮助函数。有链接的都从 import 来;宏拼写(`AVERROR`、`AV_NOPTS_VALUE`、`AVIO_FLAG_WRITE`、`MKTAG` …)与 inline 工具(`av_q2d`、`av_clip` …)在 import 前加可选侧头:
 
 ```cpp
 #include <ffmpeg-m/macros.h>
-import ffmpeg.av;
+import mcpplibs.mwrap.ffmpeg.av;
 ```
 
 C 的复合字面量宏有 C++ 替换从模块导出:`av_err2str` → `av_err2string(err).c_str()`、`av_ts2str` → `av_ts2string`、`av_ts2timestr` → `av_ts2timestring`、`av_fourcc2str` → `av_fourcc2string`。
@@ -90,12 +90,12 @@ cd examples/decode_frames && mcpp run -- video.mp4
 
 ## Current-client quickstart candidate
 
-The wrapper revision is `8.1.2.1`; the upstream C/C++ API and published module
+The wrapper revision is `8.1.2`; the upstream C/C++ API and published module
 identity stay unchanged. Development tooling uses mcpp `2026.10.24.1`. Templates
 now write one qualified dependency from `self.name`, without repeating a namespace.
 
 ```sh
-mcpp new quickstart --template ffmpeg.ffmpeg@8.1.2.1:decode
+mcpp new quickstart --template mcpplibs.mwrap.ffmpeg@8.1.2:decode
 cd quickstart
 mcpp run
 ```

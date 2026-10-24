@@ -1,4 +1,6 @@
 // ffmpeg — package lib-root module; forwards to the ffmpeg.av umbrella.
-export module ffmpeg;
+export module mcpplibs.mwrap.ffmpeg;
 
-export import ffmpeg.av;
+export import mcpplibs.mwrap.ffmpeg.av;
+
+export import mcpplibs.mwrap.ffmpeg.macros;

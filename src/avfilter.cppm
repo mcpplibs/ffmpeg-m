@@ -5,8 +5,8 @@ extern "C" {
 #include "gen_exports/avfilter.includes.inc"
 }
 
-export module ffmpeg.avfilter;
+export module mcpplibs.mwrap.ffmpeg.avfilter;
 
-export import ffmpeg.avutil;
+export import mcpplibs.mwrap.ffmpeg.avutil;
 
 #include "gen_exports/avfilter.inc"

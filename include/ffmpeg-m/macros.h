@@ -1,13 +1,13 @@
 // ffmpeg-m/macros.h — optional side header for FFmpeg's preprocessor surface.
 //
 // C++ named modules cannot export macros or static-inline helpers. Everything
-// with linkage comes from `import ffmpeg.av;`; consumers who also want the
+// with linkage comes from `import mcpplibs.mwrap.ffmpeg.av;`; consumers who also want the
 // macro spellings (AVERROR, MKTAG, AV_NOPTS_VALUE, AV_TIME_BASE_Q, AV_RL32,
 // LIBAV*_VERSION_*) or the header-only inline utilities (av_q2d, av_make_q,
 // av_clip family, av_rescale_q) textually include THIS header next to the
 // import:
 //
-//     import ffmpeg.av;
+//     import mcpplibs.mwrap.ffmpeg.av;
 //     #include <ffmpeg-m/macros.h>       // optional, macro habits only
 //
 // The declarations herein denote the same global-module entities the modules

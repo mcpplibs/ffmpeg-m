@@ -13,7 +13,7 @@
 
 #include <ffmpeg-m/macros.h>
 
-import ffmpeg.av;
+import mcpplibs.mwrap.ffmpeg.av;
 
 namespace {
 

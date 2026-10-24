@@ -5,8 +5,8 @@ extern "C" {
 #include "gen_exports/swresample.includes.inc"
 }
 
-export module ffmpeg.swresample;
+export module mcpplibs.mwrap.ffmpeg.swresample;
 
-export import ffmpeg.avutil;
+export import mcpplibs.mwrap.ffmpeg.avutil;
 
 #include "gen_exports/swresample.inc"

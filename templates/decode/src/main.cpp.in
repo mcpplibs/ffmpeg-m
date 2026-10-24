@@ -1,6 +1,6 @@
 // Decode a supplied video, or a generated three-frame sample when run without arguments.
 import std;
-import ffmpeg.av;
+import mcpplibs.mwrap.ffmpeg.av;
 
 int main(int argc, char** argv) {
     struct Sample {

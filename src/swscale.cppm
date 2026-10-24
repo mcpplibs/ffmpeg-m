@@ -5,8 +5,8 @@ extern "C" {
 #include "gen_exports/swscale.includes.inc"
 }
 
-export module ffmpeg.swscale;
+export module mcpplibs.mwrap.ffmpeg.swscale;
 
-export import ffmpeg.avutil;
+export import mcpplibs.mwrap.ffmpeg.avutil;
 
 #include "gen_exports/swscale.inc"
