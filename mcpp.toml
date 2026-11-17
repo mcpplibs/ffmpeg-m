@@ -2,7 +2,7 @@
 [package]
 namespace = "mcpplibs.mwrap"
 name = "ffmpeg"
-version = "8.1.2"
+version = "8.1.2.1"
 description = "FFmpeg 8.1.2 C++ modules for mcpp (import mcpplibs.mwrap.ffmpeg.av;) on top of the compat.ffmpeg source build"
 license = "Apache-2.0"
 authors = ["mcpp-community"]

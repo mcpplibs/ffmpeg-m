@@ -24,14 +24,14 @@ Thin module interfaces over `compat.ffmpeg`; sources, frozen configuration and N
 ## Getting started
 
 ```sh
-mcpp new media --template mcpplibs.mwrap.ffmpeg@8.1.2
+mcpp new media --template mcpplibs.mwrap.ffmpeg@8.1.2.1
 cd media
 mcpp run
 ```
 
 ```toml
 [dependencies]
-mcpplibs.mwrap.ffmpeg = "8.1.2"
+mcpplibs.mwrap.ffmpeg = "8.1.2.1"
 ```
 
 ```cpp
