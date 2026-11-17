@@ -61,9 +61,9 @@ def main():
             replacement += ', features = ' + json.dumps(options["features"])
         replacement += ' }'
         lines = text.splitlines()
-        matches = [i for i, line in enumerate(lines) if line.startswith(json.dumps(identity) + " =")]
-        assert len(matches) == 1, "Expected exactly one qualified dependency from self.name"
-        lines[matches[0]] = json.dumps(identity) + " = " + replacement
+        matches = [i for i, line in enumerate(lines) if line.startswith(identity + " =")]
+        assert len(matches) == 1, "Expected exactly one dependency written as the unquoted selector"
+        lines[matches[0]] = identity + " = " + replacement
         manifest.write_text("\n".join(lines) + "\n")
         if args.index:
             candidate_index = args.index.resolve()
