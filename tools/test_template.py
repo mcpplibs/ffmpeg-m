@@ -48,7 +48,12 @@ def main():
         project = temporary / "quickstart"
         manifest = project / "mcpp.toml"
         text = manifest.read_text()
-        dependency = tomllib.loads(text)["dependencies"][identity]
+        # The key is the selector, unquoted: TOML reads it as nested tables.
+        def selected(table, selector):
+            for part in selector.split("."):
+                table = table[part]
+            return table
+        dependency = selected(tomllib.loads(text)["dependencies"], identity)
         options = {"version": dependency} if isinstance(dependency, str) else dependency
         assert options["version"] == version, options
         replacement = '{ path = ' + json.dumps(package.as_posix())
